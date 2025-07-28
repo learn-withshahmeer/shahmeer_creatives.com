@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shahmeer Creatives - Your Digital Partner</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="images/sc.png" type="image/x-icon">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google reCAPTCHA API -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    <style>
+        /* General body and HTML settings */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Lighter blue-gray background */
+            color: #2d3748; /* Darker text */
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom animations for elements on scroll */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+        .delay-500 { transition-delay: 0.5s; }
+        .delay-600 { transition-delay: 0.6s; }
+        .delay-700 { transition-delay: 0.7s; }
+
+        /* Custom button styling for a more vibrant look */
+        .btn-primary {
+            background-image: linear-gradient(to right, #4c51bf 0%, #6b46c1 100%);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px 0 rgba(76, 81, 191, 0.75);
+        }
+        .btn-primary:hover {
+            background-position: right center;
+            box-shadow: 0 8px 20px 0 rgba(76, 81, 191, 0.9);
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: #ffffff;
+            color: #4c51bf;
+            border: 2px solid #4c51bf;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn-secondary:hover {
+            background-color: #4c51bf;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(76, 81, 191, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Custom card hover effect */
+        .card-hover-effect {
+            transition: all 0.3s ease;
+        }
+        .card-hover-effect:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+        }
+
+        /* Testimonial slider specific styles */
+        .testimonial-card {
+            display: none; /* Hide all by default */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .testimonial-card.active {
+            display: block; /* Show active card */
+            opacity: 1;
+        }
+        .testimonial-navigation-button {
+            background-color: rgba(76, 81, 191, 0.7); /* Blue with transparency */
+            color: white;
+            border-radius: 50%;
+            padding: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .testimonial-navigation-button:hover {
+            background-color: #4c51bf; /* Solid blue on hover */
+            transform: scale(1.05);
+        }
+         /* Pattern for hero section background */
+        .bg-pattern {
+            background-size: 60px 60px; /* Adjust pattern size */
+            background-position: 0 0;
+            animation: movePattern 20s linear infinite; /* Subtle animation */
+        }
+        @keyframes movePattern {
+            from { background-position: 0 0; }
+            to { background-position: 60px 60px; } /* Moves pattern diagonally */
+        }
+
+        /* FAQ Accordion Styles */
+        .accordion-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background-color: #f8fafc; /* Light background for header */
+            border-bottom: 1px solid #e2e8f0; /* Subtle border */
+            border-radius: 0.75rem; /* Rounded corners */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .accordion-header:hover {
+            background-color: #eff6ff; /* Lighter blue on hover */
+        }
+        .accordion-header.active {
+            background-color: #4c51bf; /* Primary blue when active */
+            color: white;
+            border-bottom-left-radius: 0; /* Remove bottom-left radius when active */
+            border-bottom-right-radius: 0; /* Remove bottom-right radius when active */
+        }
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg); /* Rotate icon when active */
+        }
+        .accordion-icon {
+            transition: transform 0.3s ease;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            background-color: #ffffff; /* White background for content */
+            border: 1px solid #e2e8f0; /* Border matching header */
+            border-top: none; /* No top border as it connects to header */
+            border-bottom-left-radius: 0.75rem; /* Rounded corners for content */
+            border-bottom-right-radius: 0.75rem; /* Rounded corners for content */
+            padding: 0 1.5rem; /* Horizontal padding only when closed */
+        }
+        .accordion-content.open {
+            max-height: 300px; /* Adjust as needed, or use a calculated height */
+            padding: 1.5rem; /* Full padding when open */
+        }
+
+        /* Specific button styling overrides for the Offers section */
+        .offer-card .btn-primary {
+            background-image: linear-gradient(to right, #4c51bf 0%, #6b46c1 100%) !important; /* Default primary */
+            box-shadow: 0 4px 15px 0 rgba(76, 81, 191, 0.75) !important;
+        }
+
+        .offer-card .btn-primary.purple {
+            background-image: linear-gradient(to right, #8b5cf6 0%, #a855f7 100%) !important;
+            box-shadow: 0 4px 15px 0 rgba(139, 92, 246, 0.75) !important;
+        }
+
+        .offer-card .btn-primary.teal {
+            background-image: linear-gradient(to right, #0d9488 0%, #14b8a6 100%) !important;
+            box-shadow: 0 44px 15px 0 rgba(13, 148, 136, 0.75) !important;
+        }
+
+        .offer-card .btn-primary.orange {
+            background-image: linear-gradient(to right, #ea580c 0%, #f97316 100%) !important;
+            box-shadow: 0 4px 15px 0 rgba(234, 88, 12, 0.75) !important;
+        }
+
+        .offer-card .btn-primary.red {
+            background-image: linear-gradient(to right, #dc2626 0%, #ef4444 100%) !important;
+            box-shadow: 0 4px 15px 0 rgba(220, 38, 38, 0.75) !important;
+        }
+
+        .offer-card .btn-primary.gray {
+            background-image: linear-gradient(to right, #4b5563 0%, #6b7280 100%) !important;
+            box-shadow: 0 4px 15px 0 rgba(75, 85, 99, 0.75) !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-lg py-4 px-6 md:px-12 fixed w-full z-20">
+        <nav class="container mx-auto flex justify-between items-center">
+            <!-- Agency Logo -->
+            <a href="#hero" class="block">
+                <img src="logo2.png" alt="Shahmeer Creatives Logo" class="h-14 md:h-16 w-auto object-contain transition duration-300 hover:opacity-80">
+            </a>
+            <!-- Mobile Menu Button (Hamburger) -->
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none p-2 rounded-md hover:bg-gray-100 transition duration-200">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+            <!-- Desktop Navigation Links -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#services" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Services</a>
+                <a href="#projects" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Projects</a>
+                <a href="#why-us" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Why Us</a>
+                <a href="#offers" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Offers</a>
+                <a href="#team" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Team</a>
+                <a href="#testimonials" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Testimonials</a>
+                <a href="#faq" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">FAQ</a>
+                <a href="#contact" class="text-gray-700 hover:text-blue-600 font-semibold transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Contact</a>
+            </div>
+        </nav>
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden mt-4 space-y-3 bg-white rounded-lg shadow-xl p-5 border border-gray-100">
+            <a href="#services" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Services</a>
+            <a href="#projects" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Projects</a>
+            <a href="#why-us" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Why Us</a>
+            <a href="#offers" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Offers</a>
+            <a href="#team" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Team</a>
+            <a href="#testimonials" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Testimonials</a>
+            <a href="#faq" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">FAQ</a>
+            <a href="#contact" class="block text-gray-700 hover:text-blue-600 font-medium transition duration-300 px-3 py-2 rounded-md hover:bg-blue-50">Contact</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative bg-gradient-to-br from-blue-600 to-purple-700 text-white py-28 md:py-40 flex items-center justify-center min-h-screen-75 overflow-hidden">
+        <div class="absolute inset-0 bg-pattern opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 34v-4h-2v4H0v2h2v4h2v-4h4v-2H2zm0-30V0h-2v4H0v2h2v4h2V6h4V4H2zm0 12v-4h-2v4H0v2h2v4h2v-4h4v-2H2zm0 12v-4h-2v4H0v2h2v4h2v-4h4v-2H2zm0 12v-4h-2v4H0v2h2v4h2v-4h4v-2H2zm0 12v-4h-2v4H0v2h2v4h2v-4h4v-2H2zM17 2V0h-2v2h-4v2h4v4h2V4h4V2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM32 2V0h-2v2h-4v2h4v4h2V4h4V2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM47 2V0h-2v2h-4v2h4v4h2V4h4V2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM59 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 12v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        <div class="container mx-auto text-center px-6 relative z-10">
+            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6 fade-in-up">
+                Your Vision, Our <span class="text-yellow-300">Creative Expertise</span>
+            </h1>
+            <p class="text-lg md:text-xl lg:text-2xl mb-10 max-w-3xl mx-auto opacity-95 fade-in-up delay-200">
+                We're Shahmeer Creatives, a dedicated team passionate about crafting stunning digital solutions that elevate brands and deliver measurable results.
+            </p>
+            <a href="#services" class="inline-block text-white px-10 py-5 rounded-full text-lg md:text-xl font-bold shadow-xl transition duration-300 transform hover:scale-105 fade-in-up delay-400 btn-primary">
+                Discover Our Services <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 md:py-28 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 fade-in-up">Our Core Services</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                At Shahmeer Creatives, we offer a comprehensive suite of digital services designed to meet your unique business needs and help you stand out in a competitive market.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Service Card 1: Web Design & Development -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-200 card-hover-effect">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Web Design & Development</h3>
+                    <p class="text-gray-600 text-base">
+                        We build stunning, responsive, and high-performing websites from scratch. Whether you need a simple portfolio, a dynamic business site, or a complex e-commerce platform, we ensure a seamless user experience and robust functionality. Our expertise includes custom coding, CMS integration (WordPress, Shopify), and ongoing maintenance.
+                    </p>
+                </div>
+                <!-- Service Card 2: Graphic Design & Branding -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-300 card-hover-effect">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Graphic Design & Branding</h3>
+                    <p class="text-gray-600 text-base">
+                        Craft a powerful and memorable brand identity with our creative graphic design services. We specialize in logo design, brand guidelines, marketing collateral (brochures, flyers), social media graphics, and visually appealing presentations that capture your brand's essence.
+                    </p>
+                </div>
+                <!-- Service Card 3: Content Creation & Copywriting -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-400 card-hover-effect">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Content Creation & Copywriting</h3>
+                    <p class="text-gray-600 text-base">
+                        Engage and convert your audience with compelling, SEO-friendly content. Our services include website copy, blog posts, articles, product descriptions, email newsletters, and captivating social media captions that communicate your message effectively and drive action.
+                    </p>
+                </div>
+                <!-- Service Card 4: Digital Marketing Strategy -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-200 card-hover-effect">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Digital Marketing Strategy</h3>
+                    <p class="text-gray-600 text-base">
+                        Boost your online visibility and reach your target audience with our data-driven digital marketing strategies. We offer expertise in Search Engine Optimization (SEO), Social Media Marketing (SMM), Pay-Per-Click (PPC) campaigns, and email marketing to maximize your ROI.
+                    </p>
+                </div>
+                <!-- Service Card 5: UI/UX Design -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-300 card-hover-effect">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">UI/UX Design</h3>
+                    <p class="text-gray-600 text-base">
+                        We create intuitive, user-friendly interfaces (UI) and engaging user experiences (UX) that delight your customers. Our process involves user research, wireframing, prototyping, and usability testing to ensure your digital products are both beautiful and highly functional.
+                    </p>
+                </div>
+                <!-- Service Card 6: Video Production & Editing (New Service) -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-400 card-hover-effect">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Video Production & Editing</h3>
+                    <p class="text-gray-600 text-base">
+                        Tell your story dynamically with high-quality video content. We offer services from concept development and scriptwriting to filming (if local) and professional video editing for commercials, promotional videos, social media clips, and corporate presentations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects/Portfolio Section (New) -->
+    <section id="projects" class="py-16 md:py-28 bg-gray-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 fade-in-up">Our Recent Projects</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                Explore a selection of our latest work, showcasing our creativity and technical expertise across various digital domains.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Project Card 1 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect fade-in-up delay-200">
+                    <img src="e commerce.png" alt="Project 1: E-commerce Website" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">E-commerce Platform Redesign</h3>
+                        <p class="text-gray-600 text-base mb-4">
+                            A complete overhaul of an existing e-commerce site, focusing on improved user experience, mobile responsiveness, and conversion optimization.
+                        </p>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">Web Design</span>
+                        <span class="inline-block bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full ml-2">UI/UX</span>
+                    </div>
+                </div>
+                <!-- Project Card 2 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect fade-in-up delay-300">
+                    <img src="brand.png" alt="Project 2: Brand Identity" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Comprehensive Brand Identity</h3>
+                        <p class="text-gray-600 text-base mb-4">
+                            Developed a new brand identity for a tech startup, including logo, color palette, typography, and brand guidelines.
+                        </p>
+                        <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-3 py-1 rounded-full">Branding</span>
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-3 py-1 rounded-full ml-2">Graphic Design</span>
+                    </div>
+                </div>
+                <!-- Project Card 3 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect fade-in-up delay-400">
+                    <img src="content compagin.png" alt="Project 3: Content Marketing Campaign" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Content Marketing Campaign</h3>
+                        <p class="text-gray-600 text-base mb-4">
+                            Executed a full-scale content marketing campaign, producing blog posts, social media content, and email newsletters.
+                        </p>
+                        <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full">Content Creation</span>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full ml-2">Digital Marketing</span>
+                    </div>
+                </div>
+                <!-- Project Card 4 (New) -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect fade-in-up delay-500">
+                    <img src="mobile.png" alt="Project 4: Mobile App UI/UX" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Intuitive Mobile App UI/UX</h3>
+                        <p class="text-gray-600 text-base mb-4">
+                            Designed a user-friendly mobile application interface for a fitness tracking platform, focusing on seamless navigation and engaging visuals.
+                        </p>
+                        <span class="inline-block bg-teal-100 text-teal-800 text-xs font-semibold px-3 py-1 rounded-full">UI/UX Design</span>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full ml-2">Mobile Development</span>
+                    </div>
+                </div>
+                <!-- Project Card 5 (New) -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect fade-in-up delay-600">
+                    <img src="video.png" alt="Project 5: Video Ad Campaign" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Animated Explainer Video Series</h3>
+                        <p class="text-gray-600 text-base mb-4">
+                            Produced a series of short, animated explainer videos for a SaaS company to simplify complex product features for their audience.
+                        </p>
+                        <span class="inline-block bg-orange-100 text-orange-800 text-xs font-semibold px-3 py-1 rounded-full">Video Production</span>
+                        <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-3 py-1 rounded-full ml-2">Content Marketing</span>
+                    </div>
+                </div>
+                <!-- Project Card 6 (New) -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden card-hover-effect fade-in-up delay-700">
+                    <img src="seo sem.jpg" alt="Project 6: SEO Strategy" class="w-full h-56 object-cover">
+                    <div class="p-6 text-left">
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">SEO & SEM Performance Boost</h3>
+                        <p class="text-gray-600 text-base mb-4">
+                            Implemented a comprehensive SEO and SEM strategy for a local business, resulting in a 70% increase in organic traffic and lead generation.
+                        </p>
+                        <span class="inline-block bg-gray-200 text-gray-800 text-xs font-semibold px-3 py-1 rounded-full">SEO</span>
+                        <span class="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full ml-2">Digital Marketing</span>
+                    </div>
+                </div>
+            </div>
+            <a href="#contact" class="inline-block text-blue-700 px-10 py-5 rounded-full text-lg md:text-xl font-bold shadow-xl transition duration-300 transform hover:scale-105 mt-12 btn-secondary">
+                View More Projects <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section (New) -->
+    <section id="why-us" class="py-16 md:py-28 bg-blue-50">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 fade-in-up">Why Choose Shahmeer Creatives?</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                Partner with us for unparalleled creativity, dedication, and results that truly make a difference for your brand.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Feature 1 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect fade-in-up delay-200">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Innovative Solutions</h3>
+                    <p class="text-gray-600 text-base">
+                        We don't just follow trends; we set them. Our team constantly explores new technologies and creative approaches to deliver cutting-edge solutions.
+                    </p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect fade-in-up delay-300">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Client-Centric Approach</h3>
+                    <p class="text-gray-600 text-base">
+                        Your success is our priority. We listen, understand your goals, and work collaboratively to ensure your vision is brought to life, exceeding expectations.
+                    </p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white p-8 rounded-xl shadow-lg card-hover-effect fade-in-up delay-400">
+                    <div class="text-blue-600 mb-4 text-5xl">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4 text-gray-900">Results-Driven Strategy</h3>
+                    <p class="text-gray-600 text-base">
+                        Every project is executed with a clear focus on delivering measurable results, from increased traffic and engagement to higher conversions and brand loyalty.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Offers Section -->
+    <section id="offers" class="py-16 md:py-28 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 fade-in-up">Exclusive Offers & Packages</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                Choose from our specially curated packages designed to give you the best value and kickstart your digital journey.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Offer Card 1: App Development Package -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-blue-600 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-200 card-hover-effect">
+                    <h3 class="text-2xl font-bold text-blue-700 mb-4">Standard App Development</h3>
+                    <p class="text-gray-600 mb-6 text-base">
+                        Build your mobile presence with a robust and user-friendly application tailored to your needs.
+                    </p>
+                    <ul class="text-left text-gray-700 mb-6 space-y-2 text-base">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Cross-Platform Mobile App (iOS/Android)</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Basic UI/UX Design</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Core Functionality Module</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Bug Fixes (1 Month Post-Launch)</li>
+                    </ul>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$1499</div>
+                    <a href="#contact" class="inline-block text-white px-8 py-4 rounded-full font-semibold shadow-md btn-primary">Get This Offer <i class="fas fa-mobile-alt ml-2"></i></a>
+                </div>
+                <!-- Offer Card 2: Web Development Package -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-purple-600 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-300 card-hover-effect">
+                    <h3 class="text-2xl font-bold text-purple-700 mb-4">Professional Web Development</h3>
+                    <p class="text-gray-600 mb-6 text-base">
+                        Establish a strong and engaging online presence with a custom-built, responsive website.
+                    </p>
+                    <ul class="text-left text-gray-700 mb-6 space-y-2 text-base">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Custom Responsive Website (Up to 10 Pages)</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>CMS Integration (WordPress/Shopify Optional)</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Basic SEO Optimization</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Contact Form & Google Analytics Setup</li>
+                    </ul>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$999</div>
+                    <a href="#contact" class="inline-block text-white px-8 py-4 rounded-full font-semibold shadow-md btn-primary">Get This Offer <i class="fas fa-globe ml-2"></i></a>
+                </div>
+                <!-- Offer Card 3: Graphic Design Package -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-teal-600 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-400 card-hover-effect">
+                    <h3 class="text-2xl font-bold text-teal-700 mb-4">Complete Graphic Design Bundle</h3>
+                    <p class="text-gray-600 mb-6 text-base">
+                        Elevate your brand's visual identity with a comprehensive suite of design assets.
+                    </p>
+                    <ul class="text-left text-gray-700 mb-6 space-y-2 text-base">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Custom Logo Design (5 Concepts, 2 Revisions)</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Brand Style Guide</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Business Card & Letterhead Design</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>5 Social Media Templates</li>
+                    </ul>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$499</div>
+                    <a href="#contact" class="inline-block text-white px-8 py-4 rounded-full font-semibold shadow-md btn-primary">Get This Offer <i class="fas fa-paint-brush ml-2"></i></a>
+                </div>
+                <!-- Offer Card 4: Video Editing Package -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-orange-600 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-200 card-hover-effect">
+                    <h3 class="text-2xl font-bold text-orange-700 mb-4">Dynamic Video Editing Service</h3>
+                    <p class="text-gray-600 mb-6 text-base">
+                        Bring your stories to life with professional video editing, perfect for marketing or content.
+                    </p>
+                    <ul class="text-left text-gray-700 mb-6 space-y-2 text-base">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Up to 5 Minutes Edited Video</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Basic Motion Graphics & Text Overlays</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Background Music & Sound Effects</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Color Correction & Grading</li>
+                    </ul>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$349</div>
+                    <a href="#contact" class="inline-block text-white px-8 py-4 rounded-full font-semibold shadow-md btn-primary">Get This Offer <i class="fas fa-video ml-2"></i></a>
+                </div>
+                <!-- Offer Card 5: Data Entry Package -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-300 card-hover-effect">
+                    <h3 class="text-2xl font-bold text-red-700 mb-4">Efficient Data Entry Solution</h3>
+                    <p class="text-gray-600 mb-6 text-base">
+                        Streamline your operations with accurate and timely data entry and organization services.
+                    </p>
+                    <ul class="text-left text-gray-700 mb-6 space-y-2 text-base">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Up to 1000 Data Entries</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Data Cleaning & Formatting</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Basic Spreadsheet Organization</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Fast Turnaround Time</li>
+                    </ul>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">$199</div>
+                    <a href="#contact" class="inline-block text-white px-8 py-4 rounded-full font-semibold shadow-md btn-primary">Get This Offer <i class="fas fa-database ml-2"></i></a>
+                </div>
+                <!-- Offer Card 6: Custom Project Consultation -->
+                <div class="bg-gray-50 p-8 rounded-xl shadow-lg border-t-4 border-gray-600 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-400 card-hover-effect">
+                    <h3 class="text-2xl font-bold text-gray-700 mb-4">Custom Project Consultation</h3>
+                    <p class="text-gray-600 mb-6 text-base">
+                        Have a unique idea? Let's discuss your custom project and build a tailored solution.
+                    </p>
+                    <ul class="text-left text-gray-700 mb-6 space-y-2 text-base">
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Detailed Project Scoping & Planning</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Technology Stack Recommendation</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Custom Quote & Timeline</li>
+                        <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>Dedicated Account Manager</li>
+                    </ul>
+                    <div class="text-4xl font-bold text-gray-900 mb-6">Custom Quote</div>
+                    <a href="#contact" class="inline-block text-white px-8 py-4 rounded-full font-semibold shadow-md btn-primary">Get Consultation <i class="fas fa-hand-holding-usd ml-2"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section (New) -->
+    <section id="cta" class="py-16 md:py-28 bg-gradient-to-r from-blue-700 to-indigo-800 text-white text-center">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-6 fade-in-up">
+                Ready to Bring Your Ideas to Life?
+            </h2>
+            <p class="text-lg md:text-xl mb-10 max-w-3xl mx-auto opacity-90 fade-in-up delay-200">
+                Whether you're starting fresh or looking to revamp, Shahmeer Creatives is here to help you achieve your digital aspirations.
+            </p>
+            <a href="#contact" class="inline-block text-blue-700 px-10 py-5 rounded-full text-lg md:text-xl font-bold shadow-xl transition duration-300 transform hover:scale-105 fade-in-up delay-400 btn-secondary">
+                Let's Talk! <i class="fas fa-comments ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- FAQ Section (New) -->
+    <section id="faq" class="py-16 md:py-28 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 fade-in-up">Frequently Asked Questions</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                Find answers to common questions about our services, processes, and how we work with clients.
+            </p>
+
+            <div class="max-w-3xl mx-auto space-y-4">
+                <!-- FAQ Item 1 -->
+                <div class="border border-gray-200 rounded-xl shadow-sm overflow-hidden fade-in-up delay-200">
+                    <div class="accordion-header" data-accordion-target="faq-content-1">
+                        <h3 class="text-lg font-semibold text-gray-800">What is your typical project timeline?</h3>
+                        <i class="fas fa-chevron-down accordion-icon text-gray-600"></i>
+                    </div>
+                    <div id="faq-content-1" class="accordion-content">
+                        <p class="text-gray-700">Project timelines vary greatly depending on the scope and complexity. A basic website might take 4-6 weeks, while a comprehensive branding and e-commerce solution could take 3-6 months. We provide a detailed timeline after our initial consultation and project assessment.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="border border-gray-200 rounded-xl shadow-sm overflow-hidden fade-in-up delay-300">
+                    <div class="accordion-header" data-accordion-target="faq-content-2">
+                        <h3 class="text-lg font-semibold text-gray-800">Do you offer ongoing support and maintenance?</h3>
+                        <i class="fas fa-chevron-down accordion-icon text-gray-600"></i>
+                    </div>
+                    <div id="faq-content-2" class="accordion-content">
+                        <p class="text-gray-700">Yes, absolutely! We offer various post-launch support and maintenance packages to ensure your website and digital assets remain secure, updated, and performing optimally. This can include regular backups, security monitoring, content updates, and technical support.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="border border-gray-200 rounded-xl shadow-sm overflow-hidden fade-in-up delay-400">
+                    <div class="accordion-header" data-accordion-target="faq-content-3">
+                        <h3 class="text-lg font-semibold text-gray-800">How do you approach client collaboration?</h3>
+                        <i class="fas fa-chevron-down accordion-icon text-gray-600"></i>
+                    </div>
+                    <div id="faq-content-3" class="accordion-content">
+                        <p class="text-gray-700">Collaboration is at the heart of our process. We believe in transparent communication and involve our clients at every stage, from initial concept and strategy to design reviews and final deployment. We use collaborative tools to ensure a smooth and efficient workflow.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="border border-gray-200 rounded-xl shadow-sm overflow-hidden fade-in-up delay-500">
+                    <div class="accordion-header" data-accordion-target="faq-content-4">
+                        <h3 class="text-lg font-semibold text-gray-800">What is your pricing model?</h3>
+                        <i class="fas fa-chevron-down accordion-icon text-gray-600"></i>
+                    </div>
+                    <div id="faq-content-4" class="accordion-content">
+                        <p class="text-gray-700">Our pricing is project-based, tailored to the specific requirements and scope of each client's needs. We provide detailed proposals after understanding your objectives. For smaller tasks, we may offer hourly rates. We aim for transparency and value in all our pricing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-16 md:py-28 bg-blue-100">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 fade-in-up">Meet Our Creative Team</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                Our diverse team of passionate professionals brings together a wealth of experience and expertise to deliver outstanding results for every client.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+                <!-- Team Member 1: Shahmeer Ahmed - CEO -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-200 card-hover-effect">
+                    <img src="2.jpg" alt="Shahmeer Ahmed - CEO" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-blue-200 shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Shahmeer Ahmed</h3>
+                    <p class="text-blue-600 font-medium mb-4">CEO</p>
+                    <p class="text-gray-600 text-sm">
+                        As CEO, Shahmeer drives the vision and strategic direction of Shahmeer Creatives, ensuring innovation and client success.
+                    </p>
+                </div>
+                <!-- Team Member 2: Imran Ali - Data Entry & Copy Paste -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-300 card-hover-effect">
+                    <img src="imran.png" alt="Imran Ali - Data Entry & Copy Paste" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-blue-200 shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Imran Ali</h3>
+                    <p class="text-blue-600 font-medium mb-4">Data Entry & Copy Paste</p>
+                    <p class="text-gray-600 text-sm">
+                        Imran ensures meticulous organization and efficient handling of all data, providing essential support for our projects.
+                    </p>
+                </div>
+                <!-- Team Member 3: Shahbaz Ali - Graphic Designer -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-400 card-hover-effect">
+                    <img src="shahbaz.png" alt="Shahbaz Ali - Graphic Designer" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-blue-200 shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Shahbaz Ali</h3>
+                    <p class="text-blue-600 font-medium mb-4">Graphic Designer</p>
+                    <p class="text-gray-600 text-sm">
+                        Shahbaz brings designs to life with his creative flair, crafting compelling visuals for all our branding and marketing initiatives.
+                    </p>
+                </div>
+                <!-- Team Member 4: Fahad Khan - Project Manager -->
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-2 fade-in-up delay-500 card-hover-effect">
+                    <img src="umeed.png" alt="Fahad Khan - Project Manager" class="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-4 border-blue-200 shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Umeed Ali</h3>
+                    <p class="text-blue-600 font-medium mb-4">Project Manager</p>
+                    <p class="text-gray-600 text-sm">
+                        Umeed ensures seamless project execution, from initial concept to on-time delivery, managing resources and client communication efficiently.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-16 md:py-28 bg-white relative overflow-hidden">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-6 fade-in-up">What Our Clients Say</h2>
+            <p class="text-lg text-gray-600 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                Don't just take our word for it. Hear directly from businesses and individuals who have partnered with Shahmeer Creatives.
+            </p>
+
+            <div class="relative max-w-2xl mx-auto">
+                <!-- Testimonial Cards Container -->
+                <div id="testimonial-carousel" class="relative w-full overflow-hidden">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-card bg-blue-50 p-8 rounded-xl shadow-lg border-l-4 border-blue-500 card-hover-effect active">
+                        <p class="text-gray-700 text-lg italic mb-6">
+                            "Shahmeer Creatives transformed our online presence! Their web design was exceptional, and the team was incredibly professional and responsive throughout the entire process. Highly recommend!"
+                        </p>
+                        <div class="flex items-center justify-center md:justify-start">
+                            <img src="ceo1.jpg" alt="Client 1" class="w-16 h-16 rounded-full mr-4 object-cover border-2 border-blue-300">
+                            <div>
+                                <p class="font-semibold text-gray-900">John Doe</p>
+                                <p class="text-gray-500 text-sm">CEO, Tech Solutions Inc.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-card bg-blue-50 p-8 rounded-xl shadow-lg border-l-4 border-purple-500 card-hover-effect">
+                        <p class="text-gray-700 text-lg italic mb-6">
+                            "The branding kit they created for us was exactly what we needed. Shahmeer Creatives captured our vision perfectly, and their attention to detail was outstanding. Fantastic work!"
+                        </p>
+                        <div class="flex items-center justify-center md:justify-start">
+                            <img src="ceo2.jpg" alt="Client 2" class="w-16 h-16 rounded-full mr-4 object-cover border-2 border-purple-300">
+                            <div>
+                                <p class="font-semibold text-gray-900">Jane Smith</p>
+                                <p class="text-gray-500 text-sm">Founder, Creative Ventures</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-card bg-blue-50 p-8 rounded-xl shadow-lg border-l-4 border-teal-500 card-hover-effect">
+                        <p class="text-gray-700 text-lg italic mb-6">
+                            "Their digital marketing strategy significantly boosted our online engagement and leads. The team is knowledgeable, proactive, and a pleasure to work with. Highly recommend their services!"
+                        </p>
+                        <div class="flex items-center justify-center md:justify-start">
+                            <img src="ceo3.jpg" alt="Client 3" class="w-16 h-16 rounded-full mr-4 object-cover border-2 border-teal-300">
+                            <div>
+                                <p class="font-semibold text-gray-900">David Lee</p>
+                                <p class="text-gray-500 text-sm">Marketing Director, Global Innovations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Navigation Buttons -->
+                <button id="prev-testimonial" class="testimonial-navigation-button absolute left-0 top-1/2 transform -translate-y-1/2 z-10 p-3 -ml-4 md:-ml-8">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="next-testimonial" class="testimonial-navigation-button absolute right-0 top-1/2 transform -translate-y-1/2 z-10 p-3 -mr-4 md:-mr-8">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-28 bg-blue-700 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6 fade-in-up">Get in Touch</h2>
+            <p class="text-lg opacity-90 mb-12 max-w-3xl mx-auto fade-in-up delay-100">
+                Have a project in mind or just want to say hello? We'd love to hear from you! Fill out the form below or reach out directly.
+            </p>
+
+            <div class="flex flex-col lg:flex-row gap-12 items-center lg:items-start">
+                <!-- Contact Information -->
+                <div class="lg:w-1/2 text-left space-y-8 fade-in-up delay-200">
+                    <div class="flex items-start">
+                        <div class="text-3xl text-yellow-300 mr-4 mt-1"><i class="fas fa-envelope"></i></div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-1">Email Us</h3>
+                            <p class="text-gray-200">mallahshahmeer10@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="text-3xl text-yellow-300 mr-4 mt-1"><i class="fas fa-phone-alt"></i></div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-1">Call Us</h3>
+                            <p class="text-gray-200">03283528500</p>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <h3 class="text-xl font-semibold mb-4">Follow Us</h3>
+                        <div class="flex space-x-4 justify-center lg:justify-start">
+                            <a href="#" class="text-white hover:text-yellow-300 text-2xl transition duration-300"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-white hover:text-yellow-300 text-2xl transition duration-300"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-white hover:text-yellow-300 text-2xl transition duration-300"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-white hover:text-yellow-300 text-2xl transition duration-300"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:w-1/2 w-full bg-white p-8 rounded-xl shadow-2xl fade-in-up delay-300">
+                    <!-- The form action will point to your PHP backend -->
+                    <form id="contactForm" action="process_contact.php" method="POST" class="space-y-6">
+                        <div>
+                            <label for="name" class="sr-only">Name</label>
+                            <input type="text" id="name" name="name" placeholder="Your Name" required
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
+                        </div>
+                        <div>
+                            <label for="email" class="sr-only">Email</label>
+                            <input type="email" id="email" name="email" placeholder="Your Email" required
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
+                        </div>
+                        <div>
+                            <label for="subject" class="sr-only">Subject</label>
+                            <input type="text" id="subject" name="subject" placeholder="Subject"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
+                        </div>
+                        <div>
+                            <label for="message" class="sr-only">Message</label>
+                            <textarea id="message" name="message" rows="6" placeholder="Your Message" required
+                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 resize-y"></textarea>
+                        </div>
+                        <!-- Google reCAPTCHA v2 Checkbox -->
+                        <div class="g-recaptcha" data-sitekey="YOUR_RECAPTCHA_SITE_KEY"></div>
+                        
+                        <button type="submit" class="w-full text-white px-8 py-4 rounded-lg text-lg font-bold shadow-md btn-primary">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                        <div id="formMessage" class="mt-4 text-center text-sm font-medium"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-12">
+        <div class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <!-- About Us -->
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Shahmeer Creatives</h3>
+                <p class="text-sm leading-relaxed">
+                    Crafting stunning digital solutions that elevate brands. We are passionate about design, development, and delivering measurable results.
+                </p>
+                <div class="flex space-x-4 mt-6">
+                    <a href="#" class="text-gray-400 hover:text-blue-500 transition duration-300 text-xl"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-blue-500 transition duration-300 text-xl"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-blue-500 transition duration-300 text-xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-blue-500 transition duration-300 text-xl"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Quick Links</h3>
+                <ul class="space-y-2">
+                    <li><a href="#services" class="hover:text-blue-500 transition duration-300">Services</a></li>
+                    <li><a href="#projects" class="hover:text-blue-500 transition duration-300">Projects</a></li>
+                    <li><a href="#why-us" class="hover:text-blue-500 transition duration-300">Why Us</a></li>
+                    <li><a href="#offers" class="hover:text-blue-500 transition duration-300">Offers</a></li>
+                    <li><a href="#team" class="hover:text-blue-500 transition duration-300">Team</a></li>
+                    <li><a href="#testimonials" class="hover:text-blue-500 transition duration-300">Testimonials</a></li>
+                    <li><a href="#faq" class="hover:text-blue-500 transition duration-300">FAQ</a></li>
+                    <li><a href="#contact" class="hover:text-blue-500 transition duration-300">Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Services -->
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Our Services</h3>
+                <ul class="space-y-2">
+                    <li><a href="#services" class="hover:text-blue-500 transition duration-300">Web Design & Development</a></li>
+                    <li><a href="#services" class="hover:text-blue-500 transition duration-300">Graphic Design & Branding</a></li>
+                    <li><a href="#services" class="hover:text-blue-500 transition duration-300">Content Creation & Copywriting</a></li>
+                    <li><a href="#services" class="hover:text-blue-500 transition duration-300">Digital Marketing Strategy</a></li>
+                    <li><a href="#services" class="hover:text-blue-500 transition duration-300">UI/UX Design</a></li>
+                    <li><a href="#services" class="hover:text-blue-500 transition duration-300">Video Production & Editing</a></li>
+                </ul>
+            </div>
+
+            <!-- Contact Info -->
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Contact Info</h3>
+                <p class="flex items-center mb-2"><i class="fas fa-envelope mr-3"></i> mallahshahmeer10@gmail.com</p>
+                <p class="flex items-center"><i class="fas fa-phone-alt mr-3"></i> 03283528500</p>
+            </div>
+        </div>
+        <div class="text-center text-sm text-gray-500 mt-12 border-t border-gray-700 pt-8">
+            &copy; 2024 Shahmeer Creatives. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+
+            // Intersection Observer for fade-in-up animations
+            const faders = document.querySelectorAll('.fade-in-up');
+            const appearOptions = {
+                threshold: 0.1, // Element is 10% in view
+                rootMargin: "0px 0px -50px 0px" // Start animation 50px before element reaches bottom of viewport
+            };
+
+            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    } else {
+                        entry.target.classList.add('is-visible');
+                        appearOnScroll.unobserve(entry.target); // Stop observing once visible
+                    }
+                });
+            }, appearOptions);
+
+            faders.forEach(fader => {
+                appearOnScroll.observe(fader);
+            });
+
+            // Testimonial Carousel Logic
+            const testimonials = document.querySelectorAll('.testimonial-card');
+            const prevButton = document.getElementById('prev-testimonial');
+            const nextButton = document.getElementById('next-testimonial');
+            let currentIndex = 0;
+
+            function showTestimonial(index) {
+                testimonials.forEach((card, i) => {
+                    card.classList.remove('active');
+                    if (i === index) {
+                        card.classList.add('active');
+                    }
+                });
+            }
+
+            if (testimonials.length > 0) {
+                showTestimonial(currentIndex); // Show the first testimonial initially
+
+                if (prevButton && nextButton) {
+                    prevButton.addEventListener('click', () => {
+                        currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+                        showTestimonial(currentIndex);
+                    });
+
+                    nextButton.addEventListener('click', () => {
+                        currentIndex = (currentIndex + 1) % testimonials.length;
+                        showTestimonial(currentIndex);
+                    });
+                }
+            }
+
+            // FAQ Accordion Logic
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const targetId = header.dataset.accordionTarget;
+                    const content = document.getElementById(targetId);
+
+                    if (content) {
+                        // Close all other open accordions
+                        document.querySelectorAll('.accordion-content.open').forEach(openContent => {
+                            if (openContent.id !== targetId) {
+                                openContent.classList.remove('open');
+                                openContent.previousElementSibling.classList.remove('active');
+                            }
+                        });
+
+                        // Toggle the clicked accordion
+                        content.classList.toggle('open');
+                        header.classList.toggle('active');
+                    }
+                });
+            });
+
+            // --- Contact Form Submission Logic (Frontend) ---
+            const contactForm = document.getElementById('contactForm');
+            const formMessage = document.getElementById('formMessage');
+
+            if (contactForm && formMessage) {
+                contactForm.addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    const formData = new FormData(contactForm);
+                    // Append reCAPTCHA response to form data
+                    const recaptchaResponse = grecaptcha.getResponse();
+                    if (!recaptchaResponse) {
+                        formMessage.textContent = 'Please complete the reCAPTCHA challenge.';
+                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                        return; // Stop submission if reCAPTCHA is not completed
+                    }
+                    formData.append('g-recaptcha-response', recaptchaResponse);
+
+
+                    formMessage.textContent = 'Sending message...';
+                    formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600'; // Loading color
+
+                    try {
+                        // The form action will be 'process_contact.php'
+                        const response = await fetch(contactForm.action, {
+                            method: 'POST',
+                            body: formData // Correctly send as FormData
+                            // Removed headers: { 'Content-Type': 'application/json' }
+                        });
+
+                        // Check if the response is valid JSON before parsing
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            const result = await response.json(); // PHP will return JSON
+                            if (result.success) {
+                                formMessage.textContent = result.message;
+                                formMessage.className = 'mt-4 text-center text-sm font-medium text-green-600'; // Success color
+                                contactForm.reset(); // Clear the form
+                                grecaptcha.reset(); // Reset reCAPTCHA widget
+                            } else {
+                                formMessage.textContent = result.message;
+                                formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                                grecaptcha.reset(); // Reset reCAPTCHA widget on error
+                            }
+                        } else {
+                            const textResult = await response.text(); // Read as text if not JSON
+                            console.error('Server did not return JSON:', textResult);
+                            formMessage.textContent = 'Server error: Invalid response format.';
+                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                            grecaptcha.reset();
+                        }
+                    } catch (error) {
+                        console.error('Error submitting form:', error);
+                        formMessage.textContent = 'Network error. Please try again.';
+                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                        grecaptcha.reset(); // Reset reCAPTCHA widget on network error
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
