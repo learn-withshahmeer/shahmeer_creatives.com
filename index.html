@@ -762,40 +762,52 @@
                 </div>
 
                 <!-- Contact Form -->
-                <div class="lg:w-1/2 w-full bg-white p-8 rounded-xl shadow-2xl fade-in-up delay-300">
-                    <!-- The form action will point to your PHP backend -->
-                    <form id="contactForm" action="process_contact.php" method="POST" class="space-y-6">
-                        <div>
-                            <label for="name" class="sr-only">Name</label>
-                            <input type="text" id="name" name="name" placeholder="Your Name" required
-                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
-                        </div>
-                        <div>
-                            <label for="email" class="sr-only">Email</label>
-                            <input type="email" id="email" name="email" placeholder="Your Email" required
-                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
-                        </div>
-                        <div>
-                            <label for="subject" class="sr-only">Subject</label>
-                            <input type="text" id="subject" name="subject" placeholder="Subject"
-                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
-                        </div>
-                        <div>
-                            <label for="message" class="sr-only">Message</label>
-                            <textarea id="message" name="message" rows="6" placeholder="Your Message" required
-                                class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 resize-y"></textarea>
-                        </div>
-                        <!-- Google reCAPTCHA v2 Checkbox -->
-                        <div class="g-recaptcha" data-sitekey="6LfM5JIrAAAAAK51wa4SIXtJpCbdCtx7lk1ZU_pu"></div>
-                        
-                        <button type="submit" class="w-full text-white px-8 py-4 rounded-lg text-lg font-bold shadow-md btn-primary">
-                            Send Message <i class="fas fa-paper-plane ml-2"></i>
-                        </button>
-                        <div id="formMessage" class="mt-4 text-center text-sm font-medium"></div>
-                    </form>
+                <section id="contact" class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-12 fade-in-up">Contact Us</h2>
+        <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg fade-in-up">
+            <form id="contactForm" action="process_contact.php" method="POST" class="space-y-6">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                 </div>
-            </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
+                    <input type="text" id="subject" name="subject" required
+                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                </div>
+
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                    <textarea id="message" name="message" rows="5" required
+                              class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+
+                <input type="hidden" id="gRecaptchaResponseInput" name="g-recaptcha-response">
+
+                <button type="submit" id="submitButton"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Send Message
+                </button>
+
+                <div id="formMessage" class="mt-4 text-center text-sm font-medium"></div>
+
+            </form>
         </div>
+    </div>
+</section>
+
+<script src="https://www.google.com/recaptcha/api.js?render=YOUR_ACTUAL_SITE_KEY" async defer></script>
+
+<script src="path/to/your/javascript.js"></script>
     </section>
 
     <!-- Footer -->
@@ -854,177 +866,173 @@
             &copy; 2024 Shahmeer Creatives. All rights reserved.
         </div>
     </footer>
-
 <script>
-        
-    document.addEventListener('DOMContentLoaded', function() {
-        // Mobile Menu Toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
+document.addEventListener('DOMContentLoaded', function() {
+    // --- 1. Mobile Menu Toggle Logic ---
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
 
-        if (mobileMenuButton && mobileMenu) {
-            mobileMenuButton.addEventListener('click', function() {
-                mobileMenu.classList.toggle('hidden');
-            });
-
-            // Close mobile menu when a link is clicked
-            mobileMenu.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenu.classList.add('hidden');
-                });
-            });
-        }
-
-        // Intersection Observer for fade-in-up animations
-        const faders = document.querySelectorAll('.fade-in-up');
-        const appearOptions = {
-            threshold: 0.1, // Element is 10% in view
-            rootMargin: "0px 0px -50px 0px" // Start animation 50px before element reaches bottom of viewport
-        };
-
-        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) {
-                    return;
-                } else {
-                    entry.target.classList.add('is-visible');
-                    appearOnScroll.unobserve(entry.target); // Stop observing once visible
-                }
-            });
-        }, appearOptions);
-
-        faders.forEach(fader => {
-            appearOnScroll.observe(fader);
+    if (mobileMenuButton && mobileMenu) {
+        mobileMenuButton.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
         });
 
-        // Testimonial Carousel Logic
-        const testimonials = document.querySelectorAll('.testimonial-card');
-        const prevButton = document.getElementById('prev-testimonial');
-        const nextButton = document.getElementById('next-testimonial');
-        let currentIndex = 0;
-
-        function showTestimonial(index) {
-            testimonials.forEach((card, i) => {
-                card.classList.remove('active');
-                if (i === index) {
-                    card.classList.add('active');
-                }
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
             });
-        }
+        });
+    }
 
-        if (testimonials.length > 0) {
-            showTestimonial(currentIndex); // Show the first testimonial initially
+    // --- 2. Intersection Observer for fade-in-up animations ---
+    const faders = document.querySelectorAll('.fade-in-up');
+    const appearOptions = {
+        threshold: 0.1, // Element is 10% in view
+        rootMargin: "0px 0px -50px 0px" // Start animation 50px before element reaches bottom of viewport
+    };
 
-            if (prevButton && nextButton) {
-                prevButton.addEventListener('click', () => {
-                    currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
-                    showTestimonial(currentIndex);
-                });
-
-                nextButton.addEventListener('click', () => {
-                    currentIndex = (currentIndex + 1) % testimonials.length;
-                    showTestimonial(currentIndex);
-                });
+    const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                return;
+            } else {
+                entry.target.classList.add('is-visible');
+                appearOnScroll.unobserve(entry.target); // Stop observing once visible
             }
-        }
-
-        // FAQ Accordion Logic/
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const targetId = header.dataset.accordionTarget;
-                const content = document.getElementById(targetId);
-
-                if (content) {
-                    // Close all other open accordions
-                    document.querySelectorAll('.accordion-content.open').forEach(openContent => {
-                        if (openContent.id !== targetId) {
-                            openContent.classList.remove('open');
-                            openContent.previousElementSibling.classList.remove('active');
-                        }
-                    });
-
-                    // Toggle the clicked accordion
-                    content.classList.toggle('open');
-                    header.classList.toggle('active');
-                }
-            });
         });
+    }, appearOptions);
 
-        // --- Contact Form Submission Logic (Frontend) ---
-        const contactForm = document.getElementById('contactForm');
-        const formMessage = document.getElementById('formMessage');
+    faders.forEach(fader => {
+        appearOnScroll.observe(fader);
+    });
 
-        // IMPORTANT: Replace 'YOUR_RECAPTCHA_SITE_KEY' with your actual reCAPTCHA Site Key.
-        // This variable is primarily for documentation/clarity if you use data-sitekey in HTML.
-        // If you were rendering reCAPTCHA explicitly with JS, you'd use this variable.
-        const RECAPTCHA_SITE_KEY = '6LfM5JIrAAAAAIeCw1JPFoASCvlwbjhc8o-GxlZJ'; 
+    // --- 3. Testimonial Carousel Logic ---
+    const testimonials = document.querySelectorAll('.testimonial-card');
+    const prevButton = document.getElementById('prev-testimonial');
+    const nextButton = document.getElementById('next-testimonial');
+    let currentIndex = 0;
 
-        if (contactForm && formMessage) {
-            contactForm.addEventListener('submit', async function(event) {
-                event.preventDefault(); // Prevent default form submission
+    function showTestimonial(index) {
+        testimonials.forEach((card, i) => {
+            card.classList.remove('active');
+            if (i === index) {
+                card.classList.add('active');
+            }
+        });
+    }
 
-                const formData = new FormData(contactForm);
-                
-                // Get reCAPTCHA response token from the widget.
-                // This assumes a reCAPTCHA v2 checkbox is present and the user has interacted with it.
-                // If using an invisible reCAPTCHA, you would typically call grecaptcha.execute() here
-                // and then handle the form submission in a callback function from reCAPTCHA.
-                const recaptchaResponse = grecaptcha.getResponse(); 
+    if (testimonials.length > 0) {
+        showTestimonial(currentIndex); // Show the first testimonial initially
 
-                // Check if reCAPTCHA was completed
-                if (!recaptchaResponse) {
-                    formMessage.textContent = 'Please complete the reCAPTCHA challenge.';
-                    formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
-                    return; // Stop submission if reCAPTCHA is not completed
-                }
-                
-                // Append reCAPTCHA response to form data.
-                // The name 'g-recaptcha-response' is standard for reCAPTCHA v2.
-                formData.append('g-recaptcha-response', recaptchaResponse);
+        if (prevButton && nextButton) {
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+                showTestimonial(currentIndex);
+            });
 
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % testimonials.length;
+                showTestimonial(currentIndex);
+            });
+        }
+    }
 
-                formMessage.textContent = 'Sending message...';
-                formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600'; // Loading color
+    // --- 4. FAQ Accordion Logic ---
+    document.querySelectorAll('.accordion-header').forEach(header => {
+        header.addEventListener('click', () => {
+            const targetId = header.dataset.accordionTarget;
+            const content = document.getElementById(targetId);
 
-                try {
-                    // The form action will be 'process_contact.php' (or whatever your PHP script is named)
-                    const response = await fetch(contactForm.action, {
-                        method: 'POST',
-                        body: formData // Correctly sends as FormData (multipart/form-data)
-                        // Do NOT set 'Content-Type': 'application/json' when sending FormData
-                    });
-
-                    // Check if the response is valid JSON before parsing
-                    const contentType = response.headers.get("content-type");
-                    if (contentType && contentType.includes("application/json")) { // Using .includes() for more robustness
-                        const result = await response.json(); // PHP will return JSON
-
-                        if (result.success) {
-                            formMessage.textContent = result.message;
-                            formMessage.className = 'mt-4 text-center text-sm font-medium text-green-600'; // Success color
-                            contactForm.reset(); // Clear the form
-                            grecaptcha.reset(); // Reset reCAPTCHA widget (important for reusability)
-                        } else {
-                            formMessage.textContent = result.message;
-                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
-                            grecaptcha.reset(); // Reset reCAPTCHA widget on error
-                        }
-                    } else {
-                        const textResult = await response.text(); // Read as text if not JSON
-                        console.error('Server did not return JSON. Raw response:', textResult);
-                        formMessage.textContent = 'Server error: Invalid response format or unexpected output.';
-                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
-                        grecaptcha.reset(); // Reset on unexpected response
+            if (content) {
+                // Close all other open accordions
+                document.querySelectorAll('.accordion-content.open').forEach(openContent => {
+                    if (openContent.id !== targetId) {
+                        openContent.classList.remove('open');
+                        openContent.previousElementSibling.classList.remove('active');
                     }
-                } catch (error) {
-                    console.error('Error submitting form:', error);
-                    formMessage.textContent = 'Network error. Please try again.';
-                    formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
-                    grecaptcha.reset(); // Reset reCAPTCHA widget on network error
-                }
+                });
+
+                // Toggle the clicked accordion
+                content.classList.toggle('open');
+                header.classList.toggle('active');
+            }
+        });
+    });
+
+    // --- 5. Contact Form Submission Logic (Frontend) ---
+    const contactForm = document.getElementById('contactForm');
+    const formMessage = document.getElementById('formMessage');
+
+    // IMPORTANT: Replace 'YOUR_ACTUAL_SITE_KEY' with your actual reCAPTCHA Site Key.
+    // This should match the 'render' parameter in the api.js script tag in your HTML.
+    const RECAPTCHA_SITE_KEY = 'YOUR_ACTUAL_SITE_KEY'; 
+
+    if (contactForm && formMessage) {
+        contactForm.addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            formMessage.textContent = 'Verifying reCAPTCHA...';
+            formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600';
+
+            // --- reCAPTCHA v3 Execution ---
+            // This is where reCAPTCHA v3 is executed to get a token.
+            grecaptcha.ready(function() {
+                grecaptcha.execute(RECAPTCHA_SITE_KEY, {action: 'submit'}).then(async function(token) {
+                    // Once the token is received, add it to the hidden input field.
+                    const gRecaptchaResponseInput = document.getElementById('gRecaptchaResponseInput');
+                    if (gRecaptchaResponseInput) {
+                        gRecaptchaResponseInput.value = token;
+                    } else {
+                        console.error("Hidden reCAPTCHA input field not found! Please check your HTML.");
+                        formMessage.textContent = 'Configuration error: reCAPTCHA input missing. Check console.';
+                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                        return; // Stop here if the input isn't found
+                    }
+
+                    // Now that the token is set, create FormData from the form.
+                    const formData = new FormData(contactForm);
+                    // The 'g-recaptcha-response' field is now automatically part of formData
+
+                    formMessage.textContent = 'Sending message...';
+                    formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600'; // Loading color
+
+                    try {
+                        // The form action will be 'process_contact.php' (or whatever your PHP script is named)
+                        const response = await fetch(contactForm.action, {
+                            method: 'POST',
+                            body: formData // Sends as FormData (multipart/form-data)
+                            // Do NOT set 'Content-Type': 'application/json' when sending FormData
+                        });
+
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && contentType.includes("application/json")) {
+                            const result = await response.json();
+
+                            if (result.success) {
+                                formMessage.textContent = result.message;
+                                formMessage.className = 'mt-4 text-center text-sm font-medium text-green-600'; // Success color
+                                contactForm.reset(); // Clear the form
+                            } else {
+                                formMessage.textContent = result.message;
+                                formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                            }
+                        } else {
+                            const textResult = await response.text();
+                            console.error('Server did not return JSON. Raw response:', textResult);
+                            formMessage.textContent = 'Server error: Invalid response format or unexpected output.';
+                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                        }
+                    } catch (error) {
+                        console.error('Error submitting form:', error);
+                        formMessage.textContent = 'Network error. Please try again.';
+                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                    }
+                });
             });
         }
     });
+});
 </script>
 </body>
 </html>
