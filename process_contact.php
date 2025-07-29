@@ -21,6 +21,10 @@ $sender_email_for_mail_function = "no-reply@yourdomain.com"; // This can be a ge
 // --- Database Configuration ---
 $db_file = 'submissions.db';
 
+// --- reCAPTCHA Configuration ---
+// IMPORTANT: Replace with your actual reCAPTCHA Secret Key
+$recaptcha_secret_key = "6LfM5JIrAAAAAK51wa4SIXtJpCbdCtx7lk1ZU_pu"; // Your reCAPTCHA secret key
+
 // --- Initialize Database ---
 function init_db($db_file) {
     try {
@@ -47,8 +51,8 @@ $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
 // --- Input Validation ---
-if (empty($data['name']) || empty($data['email']) || empty($data['subject']) || empty($data['message'])) {
-    echo json_encode(['success' => false, 'message' => 'All fields are required.']);
+if (empty($data['name']) || empty($data['email']) || empty($data['subject']) || empty($data['message']) || empty($data['recaptchaToken'])) {
+    echo json_encode(['success' => false, 'message' => 'All fields, including reCAPTCHA, are required.']);
     exit();
 }
 
@@ -61,6 +65,28 @@ $name = htmlspecialchars(strip_tags($data['name']));
 $email = htmlspecialchars(strip_tags($data['email']));
 $subject = htmlspecialchars(strip_tags($data['subject']));
 $message = htmlspecialchars(strip_tags($data['message']));
+$recaptcha_token = $data['recaptchaToken']; // Get the reCAPTCHA token from the frontend
+
+// --- reCAPTCHA Verification ---
+$recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+$recaptcha_response = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $recaptcha_token);
+$recaptcha_data = json_decode($recaptcha_response);
+
+// Check if reCAPTCHA verification was successful
+if (!$recaptcha_data->success) {
+    // Optionally, you can log $recaptcha_data->{'error-codes'} for debugging
+    error_log("reCAPTCHA verification failed: " . json_encode($recaptcha_data->{'error-codes'}));
+    echo json_encode(['success' => false, 'message' => 'reCAPTCHA verification failed. Please try again.']);
+    exit();
+}
+
+// Optionally, you can check the score for reCAPTCHA v3
+// if ($recaptcha_data->score < 0.5) { // Adjust score threshold as needed
+//     error_log("reCAPTCHA score too low: " . $recaptcha_data->score);
+//     echo json_encode(['success' => false, 'message' => 'Bot detected by reCAPTCHA. Please try again.']);
+//     exit();
+// }
+
 
 try {
     // --- Store in Database ---
