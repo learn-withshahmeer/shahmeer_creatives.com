@@ -23,7 +23,7 @@ $db_file = 'submissions.db';
 
 // --- reCAPTCHA Configuration ---
 // IMPORTANT: Replace with your actual reCAPTCHA Secret Key
-$recaptcha_secret_key = "6LfM5JIrAAAAAK51wa4SIXtJpCbdCtx7lk1ZU_pu"; // Your reCAPTCHA secret key
+$recaptcha_secret_key = "6LcdW5MrAAAAANFb_7fIGp2De-v6NhQheDuKgkEY"; // Your reCAPTCHA secret key
 
 // --- Initialize Database ---
 function init_db($db_file) {
