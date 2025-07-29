@@ -855,160 +855,176 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile Menu Toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
+  <script>
+        
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
 
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-
-                // Close mobile menu when a link is clicked
-                mobileMenu.querySelectorAll('a').forEach(link => {
-                    link.addEventListener('click', () => {
-                        mobileMenu.classList.add('hidden');
-                    });
-                });
-            }
-
-            // Intersection Observer for fade-in-up animations
-            const faders = document.querySelectorAll('.fade-in-up');
-            const appearOptions = {
-                threshold: 0.1, // Element is 10% in view
-                rootMargin: "0px 0px -50px 0px" // Start animation 50px before element reaches bottom of viewport
-            };
-
-            const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    } else {
-                        entry.target.classList.add('is-visible');
-                        appearOnScroll.unobserve(entry.target); // Stop observing once visible
-                    }
-                });
-            }, appearOptions);
-
-            faders.forEach(fader => {
-                appearOnScroll.observe(fader);
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
             });
 
-            // Testimonial Carousel Logic
-            const testimonials = document.querySelectorAll('.testimonial-card');
-            const prevButton = document.getElementById('prev-testimonial');
-            const nextButton = document.getElementById('next-testimonial');
-            let currentIndex = 0;
-
-            function showTestimonial(index) {
-                testimonials.forEach((card, i) => {
-                    card.classList.remove('active');
-                    if (i === index) {
-                        card.classList.add('active');
-                    }
+            // Close mobile menu when a link is clicked
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
                 });
-            }
+            });
+        }
 
-            if (testimonials.length > 0) {
-                showTestimonial(currentIndex); // Show the first testimonial initially
+        // Intersection Observer for fade-in-up animations
+        const faders = document.querySelectorAll('.fade-in-up');
+        const appearOptions = {
+            threshold: 0.1, // Element is 10% in view
+            rootMargin: "0px 0px -50px 0px" // Start animation 50px before element reaches bottom of viewport
+        };
 
-                if (prevButton && nextButton) {
-                    prevButton.addEventListener('click', () => {
-                        currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
-                        showTestimonial(currentIndex);
-                    });
-
-                    nextButton.addEventListener('click', () => {
-                        currentIndex = (currentIndex + 1) % testimonials.length;
-                        showTestimonial(currentIndex);
-                    });
+        const appearOnScroll = new IntersectionObserver(function(entries, appearOnScroll) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    return;
+                } else {
+                    entry.target.classList.add('is-visible');
+                    appearOnScroll.unobserve(entry.target); // Stop observing once visible
                 }
-            }
-
-            // FAQ Accordion Logic
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.addEventListener('click', () => {
-                    const targetId = header.dataset.accordionTarget;
-                    const content = document.getElementById(targetId);
-
-                    if (content) {
-                        // Close all other open accordions
-                        document.querySelectorAll('.accordion-content.open').forEach(openContent => {
-                            if (openContent.id !== targetId) {
-                                openContent.classList.remove('open');
-                                openContent.previousElementSibling.classList.remove('active');
-                            }
-                        });
-
-                        // Toggle the clicked accordion
-                        content.classList.toggle('open');
-                        header.classList.toggle('active');
-                    }
-                });
             });
+        }, appearOptions);
 
-            // --- Contact Form Submission Logic (Frontend) ---
-            const contactForm = document.getElementById('contactForm');
-            const formMessage = document.getElementById('formMessage');
+        faders.forEach(fader => {
+            appearOnScroll.observe(fader);
+        });
 
-            if (contactForm && formMessage) {
-                contactForm.addEventListener('submit', async function(event) {
-                    event.preventDefault(); // Prevent default form submission
+        // Testimonial Carousel Logic
+        const testimonials = document.querySelectorAll('.testimonial-card');
+        const prevButton = document.getElementById('prev-testimonial');
+        const nextButton = document.getElementById('next-testimonial');
+        let currentIndex = 0;
 
-                    const formData = new FormData(contactForm);
-                    // Append reCAPTCHA response to form data
-                    const recaptchaResponse = grecaptcha.getResponse();
-                    if (!recaptchaResponse) {
-                        formMessage.textContent = 'Please complete the reCAPTCHA challenge.';
-                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
-                        return; // Stop submission if reCAPTCHA is not completed
-                    }
-                    formData.append('g-recaptcha-response', recaptchaResponse);
+        function showTestimonial(index) {
+            testimonials.forEach((card, i) => {
+                card.classList.remove('active');
+                if (i === index) {
+                    card.classList.add('active');
+                }
+            });
+        }
 
+        if (testimonials.length > 0) {
+            showTestimonial(currentIndex); // Show the first testimonial initially
 
-                    formMessage.textContent = 'Sending message...';
-                    formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600'; // Loading color
+            if (prevButton && nextButton) {
+                prevButton.addEventListener('click', () => {
+                    currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+                    showTestimonial(currentIndex);
+                });
 
-                    try {
-                        // The form action will be 'process_contact.php'
-                        const response = await fetch(contactForm.action, {
-                            method: 'POST',
-                            body: formData // Correctly send as FormData
-                            // Removed headers: { 'Content-Type': 'application/json' }
-                        });
-
-                        // Check if the response is valid JSON before parsing
-                        const contentType = response.headers.get("content-type");
-                        if (contentType && contentType.indexOf("application/json") !== -1) {
-                            const result = await response.json(); // PHP will return JSON
-                            if (result.success) {
-                                formMessage.textContent = result.message;
-                                formMessage.className = 'mt-4 text-center text-sm font-medium text-green-600'; // Success color
-                                contactForm.reset(); // Clear the form
-                                grecaptcha.reset(); // Reset reCAPTCHA widget
-                            } else {
-                                formMessage.textContent = result.message;
-                                formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
-                                grecaptcha.reset(); // Reset reCAPTCHA widget on error
-                            }
-                        } else {
-                            const textResult = await response.text(); // Read as text if not JSON
-                            console.error('Server did not return JSON:', textResult);
-                            formMessage.textContent = 'Server error: Invalid response format.';
-                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
-                            grecaptcha.reset();
-                        }
-                    } catch (error) {
-                        console.error('Error submitting form:', error);
-                        formMessage.textContent = 'Network error. Please try again.';
-                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
-                        grecaptcha.reset(); // Reset reCAPTCHA widget on network error
-                    }
+                nextButton.addEventListener('click', () => {
+                    currentIndex = (currentIndex + 1) % testimonials.length;
+                    showTestimonial(currentIndex);
                 });
             }
+        }
+
+        // FAQ Accordion Logic/
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const targetId = header.dataset.accordionTarget;
+                const content = document.getElementById(targetId);
+
+                if (content) {
+                    // Close all other open accordions
+                    document.querySelectorAll('.accordion-content.open').forEach(openContent => {
+                        if (openContent.id !== targetId) {
+                            openContent.classList.remove('open');
+                            openContent.previousElementSibling.classList.remove('active');
+                        }
+                    });
+
+                    // Toggle the clicked accordion
+                    content.classList.toggle('open');
+                    header.classList.toggle('active');
+                }
+            });
         });
-    </script>
+
+        // --- Contact Form Submission Logic (Frontend) ---
+        const contactForm = document.getElementById('contactForm');
+        const formMessage = document.getElementById('formMessage');
+
+        // IMPORTANT: Replace 'YOUR_RECAPTCHA_SITE_KEY' with your actual reCAPTCHA Site Key.
+        // This variable is primarily for documentation/clarity if you use data-sitekey in HTML.
+        // If you were rendering reCAPTCHA explicitly with JS, you'd use this variable.
+        const RECAPTCHA_SITE_KEY = '6LfM5JIrAAAAAIeCw1JPFoASCvlwbjhc8o-GxlZJ'; 
+
+        if (contactForm && formMessage) {
+            contactForm.addEventListener('submit', async function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                const formData = new FormData(contactForm);
+                
+                // Get reCAPTCHA response token from the widget.
+                // This assumes a reCAPTCHA v2 checkbox is present and the user has interacted with it.
+                // If using an invisible reCAPTCHA, you would typically call grecaptcha.execute() here
+                // and then handle the form submission in a callback function from reCAPTCHA.
+                const recaptchaResponse = grecaptcha.getResponse(); 
+
+                // Check if reCAPTCHA was completed
+                if (!recaptchaResponse) {
+                    formMessage.textContent = 'Please complete the reCAPTCHA challenge.';
+                    formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                    return; // Stop submission if reCAPTCHA is not completed
+                }
+                
+                // Append reCAPTCHA response to form data.
+                // The name 'g-recaptcha-response' is standard for reCAPTCHA v2.
+                formData.append('g-recaptcha-response', recaptchaResponse);
+
+
+                formMessage.textContent = 'Sending message...';
+                formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600'; // Loading color
+
+                try {
+                    // The form action will be 'process_contact.php' (or whatever your PHP script is named)
+                    const response = await fetch(contactForm.action, {
+                        method: 'POST',
+                        body: formData // Correctly sends as FormData (multipart/form-data)
+                        // Do NOT set 'Content-Type': 'application/json' when sending FormData
+                    });
+
+                    // Check if the response is valid JSON before parsing
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) { // Using .includes() for more robustness
+                        const result = await response.json(); // PHP will return JSON
+
+                        if (result.success) {
+                            formMessage.textContent = result.message;
+                            formMessage.className = 'mt-4 text-center text-sm font-medium text-green-600'; // Success color
+                            contactForm.reset(); // Clear the form
+                            grecaptcha.reset(); // Reset reCAPTCHA widget (important for reusability)
+                        } else {
+                            formMessage.textContent = result.message;
+                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                            grecaptcha.reset(); // Reset reCAPTCHA widget on error
+                        }
+                    } else {
+                        const textResult = await response.text(); // Read as text if not JSON
+                        console.error('Server did not return JSON. Raw response:', textResult);
+                        formMessage.textContent = 'Server error: Invalid response format or unexpected output.';
+                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                        grecaptcha.reset(); // Reset on unexpected response
+                    }
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    formMessage.textContent = 'Network error. Please try again.';
+                    formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                    grecaptcha.reset(); // Reset reCAPTCHA widget on network error
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
