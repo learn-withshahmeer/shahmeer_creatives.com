@@ -856,6 +856,7 @@
     </footer>
 
 <script>
+        
     document.addEventListener('DOMContentLoaded', function() {
         // Mobile Menu Toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -927,7 +928,7 @@
             }
         }
 
-        // FAQ Accordion Logic
+        // FAQ Accordion Logic/
         document.querySelectorAll('.accordion-header').forEach(header => {
             header.addEventListener('click', () => {
                 const targetId = header.dataset.accordionTarget;
@@ -953,80 +954,74 @@
         const contactForm = document.getElementById('contactForm');
         const formMessage = document.getElementById('formMessage');
 
-        // IMPORTANT: Replace 'YOUR_ACTUAL_SITE_KEY' with your actual reCAPTCHA Site Key.
-        // This should match the 'render' parameter in the api.js script tag above.
+        // IMPORTANT: Replace 'YOUR_RECAPTCHA_SITE_KEY' with your actual reCAPTCHA Site Key.
+        // This variable is primarily for documentation/clarity if you use data-sitekey in HTML.
+        // If you were rendering reCAPTCHA explicitly with JS, you'd use this variable.
         const RECAPTCHA_SITE_KEY = '6LfM5JIrAAAAAIeCw1JPFoASCvlwbjhc8o-GxlZJ'; 
 
         if (contactForm && formMessage) {
             contactForm.addEventListener('submit', async function(event) {
                 event.preventDefault(); // Prevent default form submission
 
-                formMessage.textContent = 'Verifying reCAPTCHA...';
-                formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600';
+                const formData = new FormData(contactForm);
+                
+                // Get reCAPTCHA response token from the widget.
+                // This assumes a reCAPTCHA v2 checkbox is present and the user has interacted with it.
+                // If using an invisible reCAPTCHA, you would typically call grecaptcha.execute() here
+                // and then handle the form submission in a callback function from reCAPTCHA.
+                const recaptchaResponse = grecaptcha.getResponse(); 
 
-                // --- reCAPTCHA v3 Execution ---
-                // This is where reCAPTCHA v3 is executed to get a token.
-                grecaptcha.ready(function() {
-                    grecaptcha.execute(6LfM5JIrAAAAAIeCw1JPFoASCvlwbjhc8o-GxlZJ, {action: 'submit'}).then(async function(token) {
-                        // Once the token is received, add it to the hidden input field.
-                        const gRecaptchaResponseInput = document.getElementById('gRecaptchaResponseInput');
-                        if (gRecaptchaResponseInput) {
-                            gRecaptchaResponseInput.value = token;
-                        } else {
-                            console.error("Hidden reCAPTCHA input field not found!");
-                            formMessage.textContent = 'Configuration error: reCAPTCHA input missing.';
-                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
-                            return; // Stop here if the input isn't found
-                        }
+                // Check if reCAPTCHA was completed
+                if (!recaptchaResponse) {
+                    formMessage.textContent = 'Please complete the reCAPTCHA challenge.';
+                    formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                    return; // Stop submission if reCAPTCHA is not completed
+                }
+                
+                // Append reCAPTCHA response to form data.
+                // The name 'g-recaptcha-response' is standard for reCAPTCHA v2.
+                formData.append('g-recaptcha-response', recaptchaResponse);
 
-                        // Now that the token is set, create FormData from the form.
-                        const formData = new FormData(contactForm);
-                        // The 'g-recaptcha-response' field is now part of formData
 
-                        formMessage.textContent = 'Sending message...';
-                        formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600'; // Loading color
+                formMessage.textContent = 'Sending message...';
+                formMessage.className = 'mt-4 text-center text-sm font-medium text-blue-600'; // Loading color
 
-                        try {
-                            // The form action will be 'process_contact.php' (or whatever your PHP script is named)
-                            const response = await fetch(contactForm.action, {
-                                method: 'POST',
-                                body: formData // Sends as FormData (multipart/form-data)
-                                // Do NOT set 'Content-Type': 'application/json' when sending FormData
-                            });
-
-                            const contentType = response.headers.get("content-type");
-                            if (contentType && contentType.includes("application/json")) {
-                                const result = await response.json();
-
-                                if (result.success) {
-                                    formMessage.textContent = result.message;
-                                    formMessage.className = 'mt-4 text-center text-sm font-medium text-green-600'; // Success color
-                                    contactForm.reset(); // Clear the form
-                                    // For v3, grecaptcha.reset() is often not strictly necessary as it's score-based
-                                    // and doesn't usually present a challenge to be reset.
-                                    // If you want to clear the hidden token field, you can do:
-                                    // gRecaptchaResponseInput.value = '';
-                                } else {
-                                    formMessage.textContent = result.message;
-                                    formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
-                                }
-                            } else {
-                                const textResult = await response.text();
-                                console.error('Server did not return JSON. Raw response:', textResult);
-                                formMessage.textContent = 'Server error: Invalid response format or unexpected output.';
-                                formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
-                            }
-                        } catch (error) {
-                            console.error('Error submitting form:', error);
-                            formMessage.textContent = 'Network error. Please try again.';
-                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
-                        } finally {
-                            // This ensures the reCAPTCHA can be executed again if the user tries to resubmit.
-                            // For v3, reset is less about UI and more about internal state if needed.
-                            // However, simply updating the hidden input is usually sufficient.
-                        }
+                try {
+                    // The form action will be 'process_contact.php' (or whatever your PHP script is named)
+                    const response = await fetch(contactForm.action, {
+                        method: 'POST',
+                        body: formData // Correctly sends as FormData (multipart/form-data)
+                        // Do NOT set 'Content-Type': 'application/json' when sending FormData
                     });
-                });
+
+                    // Check if the response is valid JSON before parsing
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) { // Using .includes() for more robustness
+                        const result = await response.json(); // PHP will return JSON
+
+                        if (result.success) {
+                            formMessage.textContent = result.message;
+                            formMessage.className = 'mt-4 text-center text-sm font-medium text-green-600'; // Success color
+                            contactForm.reset(); // Clear the form
+                            grecaptcha.reset(); // Reset reCAPTCHA widget (important for reusability)
+                        } else {
+                            formMessage.textContent = result.message;
+                            formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                            grecaptcha.reset(); // Reset reCAPTCHA widget on error
+                        }
+                    } else {
+                        const textResult = await response.text(); // Read as text if not JSON
+                        console.error('Server did not return JSON. Raw response:', textResult);
+                        formMessage.textContent = 'Server error: Invalid response format or unexpected output.';
+                        formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600';
+                        grecaptcha.reset(); // Reset on unexpected response
+                    }
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    formMessage.textContent = 'Network error. Please try again.';
+                    formMessage.className = 'mt-4 text-center text-sm font-medium text-red-600'; // Error color
+                    grecaptcha.reset(); // Reset reCAPTCHA widget on network error
+                }
             });
         }
     });
