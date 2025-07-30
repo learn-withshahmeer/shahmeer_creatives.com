@@ -50,7 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $response['message'] = 'Your message has been sent successfully!';
     } else {
         $response['message'] = 'Failed to send your message. Please try again later.';
-        // You might want to log mail() errors for debugging: error_log("Mail failed to send: " . error_get_last()['message']);
+        // This line will now log detailed mail errors to your server's PHP error log:
+        error_log("Mail failed to send from contact form: " . error_get_last()['message']);
     }
 
 } else {
