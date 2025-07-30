@@ -4,6 +4,23 @@ header('Content-Type: application/json'); // Set header to indicate JSON respons
 // Initialize response array
 $response = ['success' => false, 'message' => 'An unknown error occurred.'];
 
+// Include PHPMailer classes
+// In a real project, you would typically install PHPMailer via Composer:
+// composer require phpmailer/phpmailer
+// and then use: require 'vendor/autoload.php';
+// For this example, we'll use direct includes (assuming files are available).
+// You'll need to download PHPMailer and place these files in your server.
+// For testing, you can place them in the same directory as this script,
+// or a 'phpmailer' subdirectory.
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Adjust these paths if PHPMailer is in a different directory
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+
+
 // Check if the request method is POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Collect and sanitize input data
@@ -21,37 +38,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Prepare email details
-    $to = 'your-email@example.com'; // IMPORTANT: Replace with the actual email address where you want to receive messages
-    $email_subject = "New Contact Form Submission: " . $subject;
+    // Create an instance of PHPMailer
+    $mail = new PHPMailer(true); // Passing true enables exceptions
 
-    // Build the email body
-    $email_body = "You have received a new message from your website contact form.\n\n";
-    $email_body .= "Name: " . $name . "\n";
-    $email_body .= "Email: " . $email . "\n";
-    if (!empty($phone)) {
-        $email_body .= "Phone: " . $phone . "\n";
-    }
-    $email_body .= "Subject: " . $subject . "\n";
-    
-    if (!empty($services)) {
-        $email_body .= "Services Interested In: " . implode(", ", $services) . "\n";
-    }
-    $email_body .= "Message:\n" . $message . "\n";
+    try {
+        // Server settings for SMTP
+        $mail->isSMTP();                                            // Send using SMTP
+        $mail->Host       = 'smtp.your-email-provider.com';       // IMPORTANT: Set the SMTP server to send through (e.g., 'smtp.gmail.com' for Gmail)
+        $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+        $mail->Username   = 'your-smtp-username@example.com';     // IMPORTANT: SMTP username (e.g., your full email address)
+        $mail->Password   = 'your-smtp-password';                 // IMPORTANT: SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;         // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` also accepted
+        $mail->Port       = 587;                                    // TCP port to connect to (e.g., 587 for STARTTLS, 465 for SMTPS)
 
-    // Set email headers
-    $headers = "From: webmaster@example.com\r\n"; // IMPORTANT: Replace with a valid sender email for your domain
-    $headers .= "Reply-To: " . $email . "\r\n";
-    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        // Recipients
+        $mail->setFrom('no-reply@yourdomain.com', 'Shahmeer Creatives Contact Form'); // IMPORTANT: Sender email and name. Must be a valid email on your domain for many hosts.
+        $mail->addAddress('your-recipient-email@example.com', 'Recipient Name'); // IMPORTANT: Add a recipient email address
+        $mail->addReplyTo($email, $name); // Set the reply-to address from the user's input
 
-    // Attempt to send the email
-    if (mail($to, $email_subject, $email_body, $headers)) {
+        // Content
+        $mail->isHTML(false); // Set email format to plain text
+        $mail->Subject = "New Contact Form Submission: " . $subject;
+        
+        // Build the email body
+        $email_body = "You have received a new message from your website contact form.\n\n";
+        $email_body .= "Name: " . $name . "\n";
+        $email_body .= "Email: " . $email . "\n";
+        if (!empty($phone)) {
+            $email_body .= "Phone: " . $phone . "\n";
+        }
+        $email_body .= "Subject: " . $subject . "\n";
+        
+        if (!empty($services)) {
+            $email_body .= "Services Interested In: " . implode(", ", $services) . "\n";
+        }
+        $email_body .= "Message:\n" . $message . "\n";
+
+        $mail->Body = $email_body;
+
+        $mail->send();
         $response['success'] = true;
         $response['message'] = 'Your message has been sent successfully!';
-    } else {
-        $response['message'] = 'Failed to send your message. Please try again later.';
-        // This line will now log detailed mail errors to your server's PHP error log:
-        error_log("Mail failed to send from contact form: " . error_get_last()['message']);
+    } catch (Exception $e) {
+        $response['message'] = 'Failed to send your message. Mailer Error: ' . $mail->ErrorInfo;
+        // Log the detailed error for debugging
+        error_log("Contact Form Mailer Error: " . $mail->ErrorInfo);
     }
 
 } else {
