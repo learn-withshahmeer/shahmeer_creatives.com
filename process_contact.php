@@ -1,129 +1,62 @@
 <?php
-// Set headers for JSON response
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *'); // Allow requests from any origin (for development)
-                                        // In production, change * to your website's domain (e.g., https://yourshahmeercreatives.com)
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Content-Type: application/json'); // Set header to indicate JSON response
 
-// Handle preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
+// Initialize response array
+$response = ['success' => false, 'message' => 'An unknown error occurred.'];
 
-// --- Email Configuration ---
-// IMPORTANT: Replace with your actual email address and recipient.
-// For production, consider using a dedicated SMTP library like PHPMailer for robust email sending.
-$recipient_email = "mallahshahmeer10@gmail.com"; // Your email where you want to receive messages
-$sender_email_for_mail_function = "no-reply@yourdomain.com"; // This can be a generic email, or configured on your web server
+// Check if the request method is POST
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Collect and sanitize input data
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $subject = filter_input(INPUT_POST, 'subject', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $services = $_POST['services'] ?? []; // Get array of services, default to empty array if not set
 
-// --- Database Configuration ---
-$db_file = 'submissions.db';
-
-// --- reCAPTCHA Configuration ---
-// IMPORTANT: Replace with your actual reCAPTCHA Secret Key
-$recaptcha_secret_key = "6LcdW5MrAAAAANFb_7fIGp2De-v6NhQheDuKgkEY"; // Your reCAPTCHA secret key
-
-// --- Initialize Database ---
-function init_db($db_file) {
-    try {
-        $db = new PDO("sqlite:$db_file");
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $db->exec("CREATE TABLE IF NOT EXISTS contact_submissions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            subject TEXT,
-            message TEXT NOT NULL,
-            submission_time DATETIME DEFAULT CURRENT_TIMESTAMP
-        )");
-        return $db;
-    } catch (PDOException $e) {
-        // Log the error (e.g., to a file, not to the user)
-        error_log("Database initialization error: " . $e->getMessage());
-        return null;
-    }
-}
-
-// Get JSON input
-$input = file_get_contents('php://input');
-$data = json_decode($input, true);
-
-// --- Input Validation ---
-if (empty($data['name']) || empty($data['email']) || empty($data['subject']) || empty($data['message']) || empty($data['recaptchaToken'])) {
-    echo json_encode(['success' => false, 'message' => 'All fields, including reCAPTCHA, are required.']);
-    exit();
-}
-
-if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-    echo json_encode(['success' => false, 'message' => 'Invalid email format.']);
-    exit();
-}
-
-$name = htmlspecialchars(strip_tags($data['name']));
-$email = htmlspecialchars(strip_tags($data['email']));
-$subject = htmlspecialchars(strip_tags($data['subject']));
-$message = htmlspecialchars(strip_tags($data['message']));
-$recaptcha_token = $data['recaptchaToken']; // Get the reCAPTCHA token from the frontend
-
-// --- reCAPTCHA Verification ---
-$recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
-$recaptcha_response = file_get_contents($recaptcha_url . '?secret=' . $recaptcha_secret_key . '&response=' . $recaptcha_token);
-$recaptcha_data = json_decode($recaptcha_response);
-
-// Check if reCAPTCHA verification was successful
-if (!$recaptcha_data->success) {
-    // Optionally, you can log $recaptcha_data->{'error-codes'} for debugging
-    error_log("reCAPTCHA verification failed: " . json_encode($recaptcha_data->{'error-codes'}));
-    echo json_encode(['success' => false, 'message' => 'reCAPTCHA verification failed. Please try again.']);
-    exit();
-}
-
-// Optionally, you can check the score for reCAPTCHA v3
-// if ($recaptcha_data->score < 0.5) { // Adjust score threshold as needed
-//     error_log("reCAPTCHA score too low: " . $recaptcha_data->score);
-//     echo json_encode(['success' => false, 'message' => 'Bot detected by reCAPTCHA. Please try again.']);
-//     exit();
-// }
-
-
-try {
-    // --- Store in Database ---
-    $db = init_db($db_file);
-    if ($db) {
-        $stmt = $db->prepare("INSERT INTO contact_submissions (name, email, subject, message) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$name, $email, $subject, $message]);
-    } else {
-        throw new Exception("Could not initialize database.");
+    // Validate required fields
+    if (empty($name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || empty($subject) || empty($message)) {
+        $response['message'] = 'Please fill in all required fields and provide a valid email address.';
+        echo json_encode($response);
+        exit;
     }
 
-    // --- Send Email ---
+    // Prepare email details
+    $to = 'your-email@example.com'; // IMPORTANT: Replace with the actual email address where you want to receive messages
     $email_subject = "New Contact Form Submission: " . $subject;
-    $email_body = "Name: $name\n";
-    $email_body .= "Email: $email\n";
-    $email_body .= "Subject: $subject\n\n";
-    $email_body .= "Message:\n$message\n\n";
-    $email_body .= "This submission has also been saved to your database.";
 
-    // Headers for the mail function
-    $headers = "From: " . $sender_email_for_mail_function . "\r\n";
-    $headers .= "Reply-To: " . $email . "\r\n"; // Set reply-to to sender's email
-    $headers .= "Content-type: text/plain; charset=UTF-8\r\n";
+    // Build the email body
+    $email_body = "You have received a new message from your website contact form.\n\n";
+    $email_body .= "Name: " . $name . "\n";
+    $email_body .= "Email: " . $email . "\n";
+    if (!empty($phone)) {
+        $email_body .= "Phone: " . $phone . "\n";
+    }
+    $email_body .= "Subject: " . $subject . "\n";
+    
+    if (!empty($services)) {
+        $email_body .= "Services Interested In: " . implode(", ", $services) . "\n";
+    }
+    $email_body .= "Message:\n" . $message . "\n";
 
-    // Use @mail to suppress errors, handle them below
-    if (@mail($recipient_email, $email_subject, $email_body, $headers)) {
-        echo json_encode(['success' => true, 'message' => 'Your message has been sent successfully and saved to our records!']);
+    // Set email headers
+    $headers = "From: webmaster@example.com\r\n"; // IMPORTANT: Replace with a valid sender email for your domain
+    $headers .= "Reply-To: " . $email . "\r\n";
+    $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+
+    // Attempt to send the email
+    if (mail($to, $email_subject, $email_body, $headers)) {
+        $response['success'] = true;
+        $response['message'] = 'Your message has been sent successfully!';
     } else {
-        // If mail() fails, it's often due to server configuration. Still, database save is a success.
-        error_log("Email sending failed. Recipient: $recipient_email, Subject: $email_subject");
-        echo json_encode(['success' => true, 'message' => 'Your message has been saved, but there was an issue sending the email notification.']);
+        $response['message'] = 'Failed to send your message. Please try again later.';
+        // You might want to log mail() errors for debugging: error_log("Mail failed to send: " . error_get_last()['message']);
     }
 
-} catch (Exception $e) {
-    // Log the error but provide a generic message to the user
-    error_log("Contact form error: " . $e->getMessage());
-    echo json_encode(['success' => false, 'message' => 'There was an error processing your request. Please try again later.']);
+} else {
+    $response['message'] = 'Invalid request method.';
 }
 
+// Send the JSON response back to the client
+echo json_encode($response);
 ?>
